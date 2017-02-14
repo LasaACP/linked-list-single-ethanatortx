@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -std=c++14 -I..
-SRCS = slist.cpp main.cpp
+SRCS = driver.cpp
 
 driver.o: $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) -o driver.o

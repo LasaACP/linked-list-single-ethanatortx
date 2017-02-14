@@ -35,7 +35,7 @@ inline bool operator!=(const typename slist<T>::const_iterator& lhs, const typen
 
 template<class T>
 class slist<T>::const_iterator:
-	public std::iterator<std::bidirectional_iterator_tag, T>
+	public std::iterator<std::bidirectional_iterator_tag, const T>
 {
 
 	friend class slist;
@@ -91,11 +91,11 @@ public:
 		return tmp;
 	}
 
-	inline const reference operator*() const
+	inline reference operator*() const
 	{
 		return ref->next->data;
 	}
-	inline const pointer operator->() const
+	inline pointer operator->() const
 	{
 		return ref->next;
 	}
@@ -125,6 +125,44 @@ public:
 	friend bool operator==(const typename slist<E>::iterator& lhs, const typename slist<E>::iterator& rhs);
 	template<class NE>
 	friend bool operator!=(const typename slist<NE>::iterator& lhs, const typename slist<NE>::iterator& rhs);
+
+	inline iterator& operator=(const iterator& rhs)
+	{
+		this->ref = rhs.ref;
+	}
+
+	inline iterator& operator++() 
+	{
+		ref = ref->next;
+		return *this;
+	}
+	inline iterator operator++(int)
+	{
+		iterator tmp(*this);
+		ref = ref->next;
+		return tmp;
+	}
+
+	inline iterator& operator--()
+	{
+		ref = ref->prev;
+		return *this;
+	}
+	inline iterator operator--(int)
+	{
+		iterator tmp(*this);
+		ref = ref->prev;
+		return tmp;
+	}
+
+	inline reference operator*() const
+	{
+		return ref->next->data;
+	}
+	inline pointer operator->() const
+	{
+		return ref->next;
+	}	
 
 	~iterator() {}
 private:
@@ -157,7 +195,7 @@ slist<T>::slist(const slist<T>& other):
 }
 // Destructor
 template<class T>
-slist<T>::~slist()
+inline slist<T>::~slist()
 {
 	clear();
 	delete tail;
@@ -193,7 +231,7 @@ inline void slist<T>::pop_front()
 
 // clear()					//erases all elements from this list.
 template<class T>
-void slist<T>::clear()
+inline void slist<T>::clear()
 {
 	while(!empty())
 	{
@@ -203,10 +241,8 @@ void slist<T>::clear()
 
 // equals(list)				//Returns true if the two lists contain the same elements in the same order.
 template<class T>
-bool slist<T>::equals(const slist<T>& other) const
-{
-	return tail == other.tail;
-}
+inline bool slist<T>::equals(const slist<T>& other) const
+	{ return tail == other.tail; }
 
 //get(index)				//Returns the element at the specified index in this list.
 template<class T>
@@ -271,28 +307,28 @@ inline typename slist<T>::const_iterator slist<T>::cend() const
 
 //insert(value, index)		//Inserts the element into this list before the specified index.
 template<class T>
-void slist<T>::insert(const typename slist<T>::iterator& pos, const T& data)
+inline void slist<T>::insert(const typename slist<T>::iterator& pos, const T& data)
 {
 	Node* n = new Node(data, pos.ref, pos.ref->prev);
 	pos.ref->next = n;
 }
 
 template<class T>
-void slist<T>::insert(const typename slist<T>::iterator& pos, T&& data)
+inline void slist<T>::insert(const typename slist<T>::iterator& pos, T&& data)
 {
 	Node* n = new Node(data, pos.ref, pos.ref->prev);
 	pos.ref->next = n;
 }
 
 template<class T>
-void slist<T>::insert(const typename slist<T>::const_iterator& pos, const T& data)
+inline void slist<T>::insert(const typename slist<T>::const_iterator& pos, const T& data)
 {
 	const Node* n = new Node(data, pos.ref, pos.ref->prev);
 	pos.ref->next = n;
 }
 
 template<class T>
-void slist<T>::insert(const typename slist<T>::const_iterator& pos, T&& data)
+inline void slist<T>::insert(const typename slist<T>::const_iterator& pos, T&& data)
 {
 	const Node* n = new Node(data, pos.ref, pos.ref->prev);
 	pos.ref->next = n;
@@ -300,12 +336,11 @@ void slist<T>::insert(const typename slist<T>::const_iterator& pos, T&& data)
 
 //swap(index1, index2)		//Switches the payload data of specified indexex.
 template<class T>
-void slist<T>::swap(slist<T>::iterator& lhs, slist<T>::iterator& rhs)
+inline void slist<T>::swap(slist<T>::iterator& lhs, slist<T>::iterator& rhs)
 {
 	T _data = lhs.ref->data;
 	lhs.ref->data = rhs.ref->data;
 	rhs.ref->data = _data;
-
 }
 
 //reverse()					// reverse the linked circular_list (end->beginning; beginning->end)
@@ -355,7 +390,7 @@ void slist<T>::rotate(typename slist<T>::const_iterator it)
 
 // empty()					//Returns true if this list contains no elements.
 template<class T>
-bool slist<T>::empty() const
+inline bool slist<T>::empty() const
 	{ return tail == tail->next; }
 
 // erase(index)				//erases the element at the specified index from this list.
@@ -388,7 +423,7 @@ void slist<T>::erase(slist<T>::const_iterator& pos)
 }
 
 template<class T>
-void slist<T>::erase(slist<T>::iterator& lhs, slist<T>::iterator& rhs)
+inline void slist<T>::erase(slist<T>::iterator& lhs, slist<T>::iterator& rhs)
 {
 	while(lhs->next != rhs)
 	{
@@ -399,7 +434,7 @@ void slist<T>::erase(slist<T>::iterator& lhs, slist<T>::iterator& rhs)
 }
 
 template<class T>
-void slist<T>::erase(slist<T>::const_iterator& lhs, slist<T>::const_iterator& rhs)
+inline void slist<T>::erase(slist<T>::const_iterator& lhs, slist<T>::const_iterator& rhs)
 {
 	while(lhs->next != rhs)
 	{
@@ -484,18 +519,43 @@ typename slist<T>::size_type slist<T>::size() const
 template<class T>
 slist<T>& slist<T>::sub_list(slist<T>::iterator& pos, slist<T>::size_type count)
 {
+	slist<T> n_list;
 
+	do
+	{
+		n_list.push_back(*pos);
+		pos++;
+	} while(count--);
+
+	return n_list;
 }
 
 template<class T>
 slist<T>& slist<T>::sub_list(slist<T>::const_iterator& pos, slist<T>::size_type count)
 {
+	slist<T> n_list;
 
+	do
+	{
+		n_list.push_back(*pos);
+		pos++;
+	} while(count--);
+
+	return n_list;
 }
 
 // toString()				//Converts the list to a printable string representation.
 template<class T>
 std::string slist<T>::to_string()
 {
+	std::istringstream ss();
 
+	for(slist<T>::iterator it = begin();
+		it != end();
+		it++)
+	{
+		ss << *it;
+	}
+
+	return ss.c_str();
 }

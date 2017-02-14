@@ -20,9 +20,8 @@ public:
 	double latitude;
 };
 
-
-
 void simpleSortTotal(Airport* s[], int c);
+
 double distanceEarth(double lat1d, double lon1d, double lat2d, double lon2d);
 
 int main()
@@ -58,7 +57,6 @@ int main()
 			}
 			*/
 
-			
 			i++ ;
 			c++;
 		}
@@ -73,9 +71,6 @@ int main()
 				std::cout <<"Distance between " << airportArr[c]->code << " and " << airportArr[c+1]->code << " is "
 				  << distanceEarth( airportArr[c]->longitude, airportArr[c]->latitude , airportArr[c+1]->longitude, airportArr[c+1]->latitude) << std::endl;
 			}
-
-
-
 	}
 	else
 	{
