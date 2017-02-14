@@ -37,48 +37,67 @@ public:
 	class const_iterator;
 
 	slist<T>& operator=(const slist<T>& other);
+
+	// comparator specialization
 	template<class E>
 	friend bool operator==(const slist<E>&, const slist<E>&);
-	template<class NE>
-	friend bool operator!=(const slist<NE>&, const slist<NE>&);
+	template<class E>
+	friend bool operator!=(const slist<E>&, const slist<E>&);
+	template<class E>
+	friend std::ostream& operator<<(std::ostream& os, const slist<E>& s_l);
 
+	// swap the payload data of two nodes in the list
 	void swap(iterator& lhs, iterator& rhs);
 
+	// rotate the list to the provided position
 	void rotate(iterator it);
 	void rotate(const_iterator it);
 
+	// reverse the list
 	void reverse();
 
+	// compare the list
 	bool equals(const slist<T>&) const;
 
+	// return true if empty
 	bool empty() const;
 
+	// return size of list
 	size_type size() const;
 
+	// clear list
 	void clear();
 
+	// append element to end of list
 	void add(const T&);
 	void add(T&&);
 
+	// append element to end of list
 	void push_back(const T&);
 	void push_back(T&&);
 
+	// erase last element in list
 	void pop_back();
 
+	// insert element at front of list
 	void push_front(const T&);
 	void push_front(T&&);
 
+	// erase first element in list
 	void pop_front();
 
+	// insert element at position
 	void insert(const iterator&, const T&);
 	void insert(const iterator&, T&&);
 	void insert(const const_iterator&, const T&);
 	void insert(const const_iterator&, T&&);
 
-	const_reference get(iterator) const;
-	const_reference get(const_iterator) const;
-	const std::vector<const_reference>& get(iterator, size_type) const;
-	const std::vector<const_reference>& get(const_iterator, size_type) const;
+	// return data at position
+	const_reference get(const iterator&) const;
+	const_reference get(const const_iterator&) const;
+	// return data in range
+	const std::vector<const_reference>& get(iterator&, const iterator&) const;
+	const std::vector<const_reference>& get(const_iterator&, const const_iterator&) const;
 
 	iterator begin();
 	const const_iterator begin() const;
@@ -87,6 +106,12 @@ public:
 	iterator end();
 	const const_iterator end() const;
 	const const_iterator cend() const;
+
+	T front ();
+	const T front() const;
+
+	T back();
+	const T back() const;
 
 	slist<T>& sub_list(slist<T>::iterator&, size_type);
 	slist<T>& sub_list(slist<T>::const_iterator&, size_type);
@@ -108,6 +133,7 @@ public:
 	void erase(const_iterator, const_iterator);
 
 	std::string to_string();
+	std::string to_string() const;
 
 	~slist();
 };
@@ -259,6 +285,49 @@ private:
 	Node* ref;
 };
 
+template<class T>
+inline bool operator==(const slist<T>& lhs, const slist<T>& rhs)
+{
+	if(lhs.size() != rhs.size()) return 0;
+
+	slist<int>::const_iterator lhs_it = lhs.begin();
+	slist<int>::const_iterator rhs_it = rhs.begin();
+
+	while((lhs_it != lhs.end()) && (rhs_it != rhs.end()))
+	{
+		if((*lhs_it) != (*rhs_it)) return false;
+		lhs_it++;
+		rhs_it++;
+	}
+
+	return true;
+}
+
+template<class T>
+inline bool operator!=(const slist<T>& lhs, const slist<T>& rhs)
+{
+	if(lhs.size() != rhs.size()) return true;
+
+	slist<int>::const_iterator lhs_it = lhs.begin();
+	slist<int>::const_iterator rhs_it = rhs.begin();
+
+	while((lhs_it != lhs.end()) && (rhs_it != rhs.end()))
+	{
+		if((*lhs_it) != (*rhs_it)) return true;
+		lhs_it++;
+		rhs_it++;
+	}
+
+	return false;
+}
+
+template<class T>
+inline std::ostream& operator<<(std::ostream& os, const slist<T>& s_l)
+{
+	os << (s_l.to_string());
+	return os;
+}
+
 // Constructor
 template<class T>
 slist<T>::slist():
@@ -336,37 +405,40 @@ inline bool slist<T>::equals(const slist<T>& other) const
 
 //get(index)				//Returns the element at the specified index in this list.
 template<class T>
-inline typename slist<T>::const_reference slist<T>::get(slist<T>::iterator pos) const
+inline typename slist<T>::const_reference slist<T>::get(const slist<T>::iterator& pos) const
 	{ return (*pos); }
 
 template<class T>
-inline typename slist<T>::const_reference slist<T>::get(slist<T>::const_iterator pos) const
+inline typename slist<T>::const_reference slist<T>::get(const slist<T>::const_iterator& pos) const
 	{ return (*pos); }
 
 template<class T>
-inline const std::vector<typename slist<T>::const_reference>& slist<T>::get(slist<T>::iterator pos, slist<T>::size_type count) const
+inline const std::vector<typename slist<T>::const_reference>& slist<T>::get(slist<T>::iterator& lhs, const slist<T>::iterator& rhs) const
 {
-	std::vector<typename slist<T>::const_reference> rvec;
-	do
-	{
-		rvec.push_back(*pos);
-		pos++;
-	} while(count--);
+	std::vector<typename slist<T>::const_reference> rvec = new std::vector<typename slist<T>::const_reference>();
 
-	return rvec;
+	while(lhs != rhs)
+	{
+		rvec.push_back(*lhs);
+		lhs++;
+	}
+
+	return *rvec;
+	
 }
 
 template<class T>
-inline const std::vector<typename slist<T>::const_reference>& slist<T>::get(slist<T>::const_iterator pos, slist<T>::size_type count) const
+inline const std::vector<typename slist<T>::const_reference>& slist<T>::get(slist<T>::const_iterator& lhs, const slist<T>::const_iterator& rhs) const
 {
-	std::vector<typename slist<T>::const_reference> rvec;
-	do
+	std::vector<typename slist<T>::const_reference> rvec = new std::vector<typename slist<T>::const_reference>();
+	
+	while(lhs != rhs)
 	{
-		rvec.push_back(*pos);
-		pos++;
-	} while(count--);
+		rvec.push_back(*lhs);
+		lhs++;
+	}
 
-	return rvec;
+	return *rvec;
 }
 
 //begin()					//returns iterator to first element
@@ -394,6 +466,22 @@ inline const typename slist<T>::const_iterator slist<T>::end() const
 template<class T>
 inline const typename slist<T>::const_iterator slist<T>::cend() const
 	{ return typename slist<T>::const_iterator(tail); }
+
+//front() 					//returns value of elemnt at front of list
+template<class T>
+inline T slist<T>::front()
+	{ return *begin(); }
+template<class T>
+inline const T slist<T>::front() const
+	{ return *begin(); } 
+
+//bacK()					//returns value of element at end of list
+template<class T>
+inline T slist<T>::back()
+	{ return *end(); }
+template<class T>
+inline const T slist<T>::back() const
+	{ return *end(); }
 
 //insert(value, index)		//Inserts the element into this list before the specified index.
 template<class T>
@@ -614,11 +702,12 @@ void slist<T>::set(
 template<class T>
 typename slist<T>::size_type slist<T>::size() const
 {
-	typename slist<T>::iterator it = begin();
+	typename slist<T>::const_iterator it = begin();
 	typename slist<T>::size_type count = 0;
 	while(it != end())
 	{
 		count++;
+		it++;
 	}
 	return count;
 }
@@ -689,6 +778,23 @@ std::string slist<T>::to_string()
 	int count = 0;
 
 	for(slist<T>::iterator it = begin();
+		it != end();
+		++it)
+	{
+		ss << (*it) << ' ';
+	}
+
+	return ss.str();
+}
+
+template<class T>
+std::string slist<T>::to_string() const
+{
+	std::stringstream ss;
+
+	int count = 0;
+
+	for(slist<T>::const_iterator it = begin();
 		it != end();
 		++it)
 	{

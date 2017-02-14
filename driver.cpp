@@ -1,4 +1,5 @@
 #include "slist.h"
+#include <cstdlib>
 #include <iostream>
 
 int main()
@@ -11,21 +12,23 @@ int main()
 	slist<int>::iterator rhs = test.end();
 	test.insert(++lhs, 7);
 
-	slist<int> sub = test.sub_list(lhs, rhs);
+	slist<int> test_cpy(test);
 
+	slist<int> sub = test.sub_list(lhs, rhs);
 	sub.push_front(19);
 
-	std::cout << test.to_string() << std::endl;
-	std::cout << sub.to_string() << std::endl;
+	int limit;
+	std::cin >> limit;
+
+	for(int i = 0; i < limit; i += ( std::rand() % (limit - i + 1)))
+	{
+		sub.push_back(i);
+	}
 
 	slist<int>::iterator sub_lhs = sub.begin();
 	slist<int>::iterator sub_rhs = sub.end();
 
-	sub.set(sub_lhs, 0);
+	std::cout << sub;
 
-	std::cout << sub.to_string() << std::endl;
-
-	sub.set(sub_lhs, sub_rhs, 0);
-
-	std::cout << sub.to_string() << std::endl;
+	return 0;
 }
