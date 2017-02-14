@@ -8,18 +8,16 @@
 
 #include <iostream>
 #include <fstream>
-#include <cmath> 
+#include <cmath>
+#include <cstdlib>
 #include "slist.h"
-
-using namespace std;
 
 class Airport
 {
 public:
-    char    code[5];
-    double   longitude;
-    double   latitude;
-    
+	char code[5];
+	double longitude;
+	double latitude;
 };
 
 
@@ -29,60 +27,60 @@ double distanceEarth(double lat1d, double lon1d, double lat2d, double lon2d);
 
 int main()
 {
-    ifstream infile;
-    int i=0;
-    char cNum[10] ;
-    Airport* airportArr[13500];
-    int   airportCount;
-    //Airport* a[13500];
-    
-    infile.open ("./USAirportCodes.csv", ifstream::in);
-    if (infile.is_open())
-    {
-        int   c=0;
-        while (infile.good())
-        {
-            airportArr[c] = new Airport();
-            infile.getline(airportArr[c]->code, 256, ',');
-            infile.getline(cNum, 256, ',');
-            airportArr[c]->longitude = atof(cNum);
-            infile.getline(cNum, 256, '\n');
-            airportArr[c]->latitude = atof(cNum);
+	std::ifstream infile;
+	int i=0;
+	char cNum[10] ;
+	Airport* airportArr[13500];
+	int airportCount;
+	//Airport* a[13500];
 
-            if (!(c % 1000))
-                cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  endl;
+	infile.open ("./USAirportCodes.csv", std::ifstream::in);
+	if (infile.is_open())
+	{
+		int   c=0;
+		while (infile.good())
+		{
+			airportArr[c] = new Airport();
+			infile.getline(airportArr[c]->code, 256, ',');
+			infile.getline(cNum, 256, ',');
+			airportArr[c]->longitude = std::atof(cNum);
+			infile.getline(cNum, 256, '\n');
+			airportArr[c]->latitude = std::atof(cNum);
 
-            /*
-            if (!(c % 1000))
-            {
-                cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  endl;
-                cout << airportArr[c+1]->code << endl; //" long: " << airportArr[c+1]->longitude << " lat: " << airportArr[c+1]->latitude <<  endl;                               
-            }
-            */
+			if (!(c % 1000))
+				std::cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  std::endl;
 
-            
-            i++ ;
-            c++;
-        }
-        airportCount = c-1;
-        infile.close();
-        
-         for (int c=0; c < airportCount; c++)
-            if (!(c % 1000))
-            {
-                cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  endl;
-                cout << airportArr[c+1]->code << " long: " << airportArr[c+1]->longitude << " lat: " << airportArr[c+1]->latitude <<  endl;
-                cout <<"Distance between " << airportArr[c]->code << " and " << airportArr[c+1]->code << " is "
-                  << distanceEarth( airportArr[c]->longitude, airportArr[c]->latitude , airportArr[c+1]->longitude, airportArr[c+1]->latitude) << endl;
-            }
+			/*
+			if (!(c % 1000))
+			{
+				cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  endl;
+				cout << airportArr[c+1]->code << endl; //" long: " << airportArr[c+1]->longitude << " lat: " << airportArr[c+1]->latitude <<  endl;                               
+			}
+			*/
+
+			
+			i++ ;
+			c++;
+		}
+		airportCount = c-1;
+		infile.close();
+		
+		 for (int c=0; c < airportCount; c++)
+			if (!(c % 1000))
+			{
+				std::cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  std::endl;
+				std::cout << airportArr[c+1]->code << " long: " << airportArr[c+1]->longitude << " lat: " << airportArr[c+1]->latitude <<  std::endl;
+				std::cout <<"Distance between " << airportArr[c]->code << " and " << airportArr[c+1]->code << " is "
+				  << distanceEarth( airportArr[c]->longitude, airportArr[c]->latitude , airportArr[c+1]->longitude, airportArr[c+1]->latitude) << std::endl;
+			}
 
 
 
-    }
-    else
-    {
-        cout << "Error opening file";
-    }
+	}
+	else
+	{
+		std::cout << "Error opening file";
+	}
  
 
 
@@ -90,7 +88,7 @@ int main()
    
    // 
 
-    
+	
 }
 
 
