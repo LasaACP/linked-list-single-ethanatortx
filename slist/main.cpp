@@ -12,9 +12,8 @@
 #include <cstdlib>
 #include "slist.h"
 
-class Airport
+struct Airport
 {
-public:
 	char code[5];
 	double longitude;
 	double latitude;

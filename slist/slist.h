@@ -36,6 +36,7 @@ public:
 	class iterator;
 	class const_iterator;
 
+	// assignment operator
 	slist<T>& operator=(const slist<T>& other);
 
 	// comparator specialization
@@ -113,11 +114,13 @@ public:
 	T back();
 	const T back() const;
 
+	// create sub list of this list
 	slist<T>& sub_list(slist<T>::iterator&, size_type);
 	slist<T>& sub_list(slist<T>::const_iterator&, size_type);
 	slist<T>& sub_list(slist<T>::iterator&, slist<T>::iterator&);
 	slist<T>& sub_list(slist<T>::const_iterator&, slist<T>::const_iterator&);
 
+	// set data of index
 	void set(iterator&, const T&);
 	void set(iterator&, T&&);
 	void set(const_iterator&, const T&);
@@ -127,14 +130,17 @@ public:
 	void set(const_iterator&, const_iterator&, const T&);
 	void set(const_iterator&, const_iterator&, T&&);
 
+	// erase data at index
 	void erase(iterator);
 	void erase(const_iterator);
 	void erase(iterator, iterator);
 	void erase(const_iterator, const_iterator);
 
+	// convert to string
 	std::string to_string();
 	std::string to_string() const;
 
+	// destroy
 	~slist();
 };
 
