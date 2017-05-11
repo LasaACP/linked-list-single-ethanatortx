@@ -3,5 +3,6 @@
 
 int main()
 {
+	btree<int> source;
 	return 0;
 }
